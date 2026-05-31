@@ -1,9 +1,28 @@
 from pathlib import Path
+from datetime import datetime
 
-DATA_RAW   = Path("data/raw/trip_stats_eta.parquet")
-DATA_CLEAN = Path("data/trips_clean.parquet")
-DATA_FEATS = Path("data/feats.parquet")
-OUT        = Path("outputs")
+DATA_RAW = Path("data/raw/trip_stats_eta.parquet")
+
+
+def get_run_paths(run_dir: Path) -> dict:
+    """Return all per-run paths derived from run_dir."""
+    run_dir.mkdir(parents=True, exist_ok=True)
+    (run_dir / "models").mkdir(exist_ok=True)
+    (run_dir / "metrics").mkdir(exist_ok=True)
+    (run_dir / "figures").mkdir(exist_ok=True)
+    return {
+        "run_dir":    run_dir,
+        "data_clean": run_dir / "trips_clean.parquet",
+        "data_feats": run_dir / "feats.parquet",
+        "models_dir": run_dir / "models",
+        "metrics_dir":run_dir / "metrics",
+        "figures_dir":run_dir / "figures",
+    }
+
+
+def new_run_dir() -> Path:
+    """Create a timestamped run directory under outputs/."""
+    return Path("outputs") / datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
 TZ_OFFSET_HOURS = 8  # request_time 是 UTC,+8 轉台灣
 

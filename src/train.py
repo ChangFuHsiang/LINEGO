@@ -7,12 +7,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import DATA_FEATS, OUT, LGB_PARAMS
-
-MODELS_DIR = OUT / "models"
-METRICS_DIR = OUT / "metrics"
-MODELS_DIR.mkdir(parents=True, exist_ok=True)
-METRICS_DIR.mkdir(parents=True, exist_ok=True)
+from config import LGB_PARAMS, get_run_paths, new_run_dir
 
 FEATURES = [
     "log_eta", "hour_sin", "hour_cos", "dow", "is_weekend",
@@ -57,9 +52,15 @@ def print_metrics(name: str, m: dict):
     print(f"  Late>60s:  {m['overpromise_gt60']:.1f}%  Early>60s: {m['underpromise_gt60']:.1f}%")
 
 
-def main(target_col: str = "target_logratio"):
+def main(run_dir: Path = None, target_col: str = "target_logratio"):
+    if run_dir is None:
+        run_dir = new_run_dir()
+    paths = get_run_paths(run_dir)
+    MODELS_DIR  = paths["models_dir"]
+    METRICS_DIR = paths["metrics_dir"]
+
     print("=== train.py ===")
-    df = pl.read_parquet(DATA_FEATS)
+    df = pl.read_parquet(paths["data_feats"])
 
     tr = df.filter(pl.col("split") == "train")
     va = df.filter(pl.col("split") == "valid")

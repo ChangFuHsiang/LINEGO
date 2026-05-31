@@ -3,11 +3,16 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import DATA_RAW, DATA_CLEAN, TZ_OFFSET_HOURS
+from config import DATA_RAW, TZ_OFFSET_HOURS, get_run_paths, new_run_dir
 
 
-def main():
+def main(run_dir: Path = None):
+    if run_dir is None:
+        run_dir = new_run_dir()
+    paths = get_run_paths(run_dir)
+
     print("=== load_clean.py ===")
+    print(f"Run dir: {run_dir}")
     print(f"Reading: {DATA_RAW}")
 
     lf = pl.scan_parquet(DATA_RAW)
@@ -76,8 +81,8 @@ def main():
 
     print(f"\nDate range: {df['date'].min()} ~ {df['date'].max()}")
 
-    df.write_parquet(DATA_CLEAN)
-    print(f"\nSaved: {DATA_CLEAN}  ({df.height:,} rows)")
+    df.write_parquet(paths["data_clean"])
+    print(f"\nSaved: {paths['data_clean']}  ({df.height:,} rows)")
 
 
 if __name__ == "__main__":
