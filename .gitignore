@@ -1,6 +1,7 @@
 # 原始大型資料(1.1GB,不上傳)
 data/raw/
-data/*.parquet
+*.parquet
+*models*
 
 # 訓練好的模型(可重新訓練)
 outputs/models/
