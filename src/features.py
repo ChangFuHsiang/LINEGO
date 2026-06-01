@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import DATA_CLEAN, DATA_FEATS, H3_RES_FINE, H3_RES_COARSE, TE_SMOOTH, SPLIT, SPECIAL_DAYS_2026
+from config import DATA_RAW, H3_RES_FINE, H3_RES_COARSE, TE_SMOOTH, SPLIT, SPECIAL_DAYS_2026, get_run_paths, new_run_dir
 
 try:
     import h3
@@ -91,9 +91,13 @@ def oof_target_encoding(train: pl.DataFrame, key: str, target: str, m: int, n_fo
     return train.with_columns(pl.Series(f"{key}_te", te_vals)).drop("_fold")
 
 
-def main(target_col: str = "target_logratio"):
+def main(run_dir: Path = None, target_col: str = "target_logratio"):
+    if run_dir is None:
+        run_dir = new_run_dir()
+    paths = get_run_paths(run_dir)
+
     print("=== features.py ===")
-    df = pl.read_parquet(DATA_CLEAN)
+    df = pl.read_parquet(paths["data_clean"])
     print(f"Loaded {df.height:,} rows")
 
     df = add_h3(df)
@@ -159,8 +163,8 @@ def main(target_col: str = "target_logratio"):
     df = df.join(demand, on=["start_town", "hour"], how="left")
     df = df.with_columns(pl.col("demand_town_hour").fill_null(1))
 
-    df.write_parquet(DATA_FEATS)
-    print(f"\nFeatures written: {DATA_FEATS}")
+    df.write_parquet(paths["data_feats"])
+    print(f"\nFeatures written: {paths['data_feats']}")
     print(f"Columns: {[c for c in df.columns if '_te' in c or c in ['hour_sin','hour_cos','dow','is_weekend','log_eta','is_special_day','demand_town_hour']]}")
 
 

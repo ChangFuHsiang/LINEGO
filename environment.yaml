@@ -1,0 +1,17 @@
+name: linego
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - polars
+    - lightgbm
+    - scikit-learn
+    - pandas
+    - matplotlib
+    - jupyterlab
+    - h3
+    - gdown
+    - pyarrow
