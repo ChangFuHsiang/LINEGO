@@ -1,0 +1,48 @@
+{
+  "blocks": [
+    "base_eta",
+    "time_basic",
+    "time_cyclic",
+    "driver_bias",
+    "time_flags",
+    "region_cat",
+    "geo_raw",
+    "geo_distance"
+  ],
+  "columns": [
+    "driver_eta",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "month",
+    "day_of_month",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "driver_avg_error",
+    "driver_median_error",
+    "driver_error_std",
+    "is_rush_hour",
+    "is_night",
+    "is_lunar_new_year",
+    "start_county",
+    "start_town",
+    "end_county",
+    "end_town",
+    "start_lat",
+    "start_lng",
+    "end_lat",
+    "end_lng",
+    "haversine_m",
+    "lat_delta",
+    "lng_delta",
+    "bearing"
+  ],
+  "categorical": [
+    "start_county",
+    "start_town",
+    "end_county",
+    "end_town"
+  ]
+}

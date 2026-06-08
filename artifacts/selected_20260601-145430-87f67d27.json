@@ -1,0 +1,24 @@
+{
+  "blocks": [
+    "base_eta",
+    "time_basic",
+    "time_cyclic",
+    "driver_bias"
+  ],
+  "columns": [
+    "driver_eta",
+    "hour",
+    "day_of_week",
+    "is_weekend",
+    "month",
+    "day_of_month",
+    "hour_sin",
+    "hour_cos",
+    "dow_sin",
+    "dow_cos",
+    "driver_avg_error",
+    "driver_median_error",
+    "driver_error_std"
+  ],
+  "categorical": []
+}

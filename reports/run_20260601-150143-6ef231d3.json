@@ -1,0 +1,58 @@
+{
+  "run_id": "20260601-150143-6ef231d3",
+  "raw_metrics": {
+    "mae": 88.49848635778324,
+    "rmse": 127.5058985424733,
+    "bias": -39.39644792147526,
+    "within_60": 49.376321096236545,
+    "within_120": 75.72292815666076,
+    "p50": 61.0,
+    "p90": 197.0,
+    "p95": 264.0,
+    "over_promise": 15.052357929007021,
+    "under_promise": 35.57132097475643,
+    "n": 205795
+  },
+  "final_metrics": {
+    "mae": 75.81081545941181,
+    "rmse": 109.33363437827381,
+    "bias": -16.951951283643975,
+    "within_60": 54.45030248548313,
+    "within_120": 81.62977720547147,
+    "p50": 53.75980041002053,
+    "p90": 164.77614042920013,
+    "p95": 223.86895738199735,
+    "over_promise": 19.33623265871377,
+    "under_promise": 26.213464855803103,
+    "n": 205795,
+    "mae_vs_raw": -12.687670898371422,
+    "rmse_vs_raw": -18.17226416419949,
+    "mae_imp_pct": 14.336596500732773,
+    "rmse_imp_pct": 14.252096861343363
+  },
+  "best_blocks": [
+    "base_eta",
+    "time_basic",
+    "time_cyclic",
+    "driver_bias",
+    "time_flags",
+    "region_cat",
+    "geo_raw",
+    "geo_distance"
+  ],
+  "best_params": {
+    "objective": "regression_l1",
+    "metric": "mae",
+    "verbosity": -1,
+    "device": "cpu",
+    "seed": 42,
+    "learning_rate": 0.04987765367029905,
+    "num_leaves": 120,
+    "min_data_in_leaf": 262,
+    "feature_fraction": 0.6054781045640791,
+    "bagging_fraction": 0.9449923596722283,
+    "bagging_freq": 3,
+    "lambda_l1": 0.0003460088720244179,
+    "lambda_l2": 0.06773742001166304
+  }
+}

@@ -1,0 +1,68 @@
+run:
+  seed: 42
+  device: cpu
+  phases: [feature, tune, final]
+
+data:
+  path: data/raw/trip_stats_eta.parquet
+  clip_target_quantiles: [0.001, 0.999]
+
+split:
+  train_months: [12, 1, 2, 3]
+  val_months:   [4]
+  test_months:  [5]
+  lny_window:   ["2026-01-28", "2026-02-05"]
+  tz_offset_hours: 8
+
+features:
+  core_blocks: [base_eta]
+  candidate_blocks:
+    - time_basic
+    - time_cyclic
+    - driver_bias
+    - region_target_enc
+  target_enc_smoothing: 100
+  target_enc_folds: 3
+
+search:
+  mode: sequential
+  strategy: forward
+  min_gain_seconds: 0.5
+  max_blocks: 4
+  exhaustive_max: 4
+  search_sample_frac: 0.3
+  proxy_params:
+    learning_rate: 0.1
+    num_boost_round: 100
+    early_stopping: 20
+  also_run_ablation: false
+
+tuning:
+  n_trials: 5
+  timeout_seconds: 120
+  num_boost_round: 200
+  early_stopping: 20
+  round_inflation: 1.1
+  pruner: median
+  n_startup_trials: 3
+  space:
+    learning_rate:    {low: 0.05, high: 0.1,  log: true}
+    num_leaves:       {low: 32,   high: 64}
+    min_data_in_leaf: {low: 50,   high: 200}
+    feature_fraction: {low: 0.8,  high: 1.0}
+    bagging_fraction: {low: 0.8,  high: 1.0}
+    bagging_freq:     {low: 1,    high: 5}
+    lambda_l1:        {low: 1.0e-4, high: 1.0, log: true}
+    lambda_l2:        {low: 1.0e-4, high: 1.0, log: true}
+
+model:
+  objective: regression_l1
+  metric: mae
+
+report:
+  dir: reports
+  emit_json_sidecar: true
+  emit_plots: false
+  min_segment_rows: 100
+  distance_buckets_km: [0, 5, 20]
+  driver_eta_buckets_s: [0, 120, 600]

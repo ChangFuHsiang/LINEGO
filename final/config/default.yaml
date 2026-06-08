@@ -1,0 +1,81 @@
+run:
+  seed: 42
+  device: cuda            # cpu fallback automatic
+  phases: [feature, tune, final]
+
+data:
+  path: data/raw/trip_stats_eta.parquet
+  clip_target_quantiles: [0.001, 0.999]   # null to disable
+
+split:
+  train_months: [12, 1, 2, 3]            # Dec 2025 + Jan-Mar 2026
+  val_months:   [4]                       # Apr 2026
+  test_months:  [5]                       # May 2026
+  lny_window:   ["2026-01-28", "2026-02-05"]
+  tz_offset_hours: 8
+
+features:
+  core_blocks: [base_eta]
+  candidate_blocks:
+    - time_basic
+    - time_cyclic
+    - time_flags
+    - geo_raw
+    - geo_distance
+    - geo_center
+    - geo_flags
+    - region_cat
+    - region_freq
+    - region_target_enc
+    - driver_bias
+    - driver_experience
+    - dest_demand
+    - origin_demand
+    - od_pair_stats
+    - eta_derived
+    - demand_by_hour
+  target_enc_smoothing: 100
+  target_enc_folds: 5
+
+search:
+  mode: sequential            # sequential | joint
+  strategy: forward           # forward | backward | ablation | exhaustive | optuna_select
+  min_gain_seconds: 0.2
+  max_blocks: 12
+  exhaustive_max: 6
+  search_sample_frac: 1.0
+  proxy_params:
+    learning_rate: 0.05
+    num_boost_round: 400
+    early_stopping: 50
+  also_run_ablation: true
+
+tuning:
+  n_trials: 150
+  timeout_seconds: 7200
+  num_boost_round: 2000
+  early_stopping: 50
+  round_inflation: 1.1
+  pruner: median
+  n_startup_trials: 10
+  space:
+    learning_rate:    {low: 0.01, high: 0.1,  log: true}
+    num_leaves:       {low: 32,   high: 256}
+    min_data_in_leaf: {low: 50,   high: 500}
+    feature_fraction: {low: 0.6,  high: 1.0}
+    bagging_fraction: {low: 0.6,  high: 1.0}
+    bagging_freq:     {low: 1,    high: 10}
+    lambda_l1:        {low: 1.0e-4, high: 10.0, log: true}
+    lambda_l2:        {low: 1.0e-4, high: 10.0, log: true}
+
+model:
+  objective: regression_l1
+  metric: mae
+
+report:
+  dir: reports
+  emit_json_sidecar: true
+  emit_plots: false
+  min_segment_rows: 200
+  distance_buckets_km: [0, 2, 5, 10, 20]
+  driver_eta_buckets_s: [0, 120, 300, 600]

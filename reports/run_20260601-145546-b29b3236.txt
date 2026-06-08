@@ -1,0 +1,191 @@
+========================================================================
+ ETA CORRECTION — RUN REPORT
+========================================================================
+Run id            : 20260601-145546-b29b3236
+Timestamp / host  : 2026-06-01 14:56:59  /  MacBook-Air-428.local
+Git commit        : 655c9e9
+Library versions  : python 3.13.2 / lightgbm 4.6.0 / optuna 4.9.0 / numpy 2.3.3 / pandas 3.0.3 / sklearn 1.8.0
+Device            : cpu (requested)
+Random seed       : 42
+
+---------------- 1. DATA & SPLITS --------------------------------------
+
+  train :    942,304 rows
+  val   :    314,220 rows
+  test  :    205,795 rows
+  LNY window     : ['2026-01-28', '2026-02-05']
+  LNY rows(train): 99858
+  Clip rule      : quantiles [0.001, 0.999]
+
+  eta_error (train): mean=+35.8s  std=121.6s  p10=-91.0s  p50=+23.0s  p90=+177.0s
+  driver_eta (train): mean=262.1s  p50=239.0s  p90=470.0s
+
+---------------- 2. CONFIG SNAPSHOT ------------------------------------
+
+  Phases:           ['feature', 'tune', 'final']
+  Core blocks:      ['base_eta']
+  Candidate blocks: ['time_basic', 'time_cyclic', 'driver_bias', 'region_target_enc']
+  Search strategy:  forward  (max_blocks=4)
+  Tuning:           n_trials=5  timeout=120s
+  Model objective:  regression_l1
+
+---------------- 3. FEATURE SEARCH -------------------------------------
+
+  Strategy: forward
+  Best block set: ['base_eta', 'time_basic', 'time_cyclic', 'driver_bias']
+  Best columns (13): ['driver_eta', 'hour', 'day_of_week', 'is_weekend', 'month', 'day_of_month', 'hour_sin', 'hour_cos', 'dow_sin', 'dow_cos', 'driver_avg_error', 'driver_median_error', 'driver_error_std']
+
+  Leaderboard (top 10):
+   1. val_MAE=78.34s  Δcore=+7.14s  #feat=13  ['base_eta', 'time_basic', 'time_cyclic', 'driver_bias']
+   2. val_MAE=78.37s  Δcore=+7.12s  #feat=9  ['base_eta', 'time_basic', 'driver_bias']
+   3. val_MAE=80.61s  Δcore=+4.88s  #feat=5  ['base_eta', 'time_cyclic']
+   4. val_MAE=80.68s  Δcore=+4.81s  #feat=10  ['base_eta', 'time_basic', 'time_cyclic']
+   5. val_MAE=80.70s  Δcore=+4.78s  #feat=6  ['base_eta', 'time_basic']
+   6. val_MAE=81.02s  Δcore=+4.47s  #feat=4  ['base_eta', 'driver_bias']
+   7. val_MAE=81.51s  Δcore=+3.98s  #feat=12  ['base_eta', 'time_basic', 'time_cyclic', 'region_target_enc']
+   8. val_MAE=81.51s  Δcore=+3.97s  #feat=8  ['base_eta', 'time_basic', 'region_target_enc']
+   9. val_MAE=85.49s  Δcore=+0.00s  #feat=1  ['base_eta']
+  10. val_MAE=85.76s  Δcore=-0.27s  #feat=3  ['base_eta', 'region_target_enc']
+
+---------------- 4. HYPERPARAMETER TUNING ------------------------------
+
+  Trials run     : 5
+  Best val MAE   : 78.20s
+  Best iteration : 199
+  Best params    :
+    learning_rate: 0.07584442335012195
+    num_leaves: 55
+    min_data_in_leaf: 53
+    feature_fraction: 0.9939819704323989
+    bagging_fraction: 0.9664885281600843
+    bagging_freq: 2
+    lambda_l1: 0.000533703276260396
+    lambda_l2: 0.0005415244119402539
+
+  Param importances:
+    learning_rate                 : 0.3305
+    min_data_in_leaf              : 0.2477
+    feature_fraction              : 0.1020
+    bagging_fraction              : 0.0963
+    num_leaves                    : 0.0825
+    lambda_l1                     : 0.0764
+    lambda_l2                     : 0.0646
+    bagging_freq                  : 0.0000
+
+---------------- 5. FINAL MODEL — TEST HOLDOUT -------------------------
+
+  Metric                              Raw API    Corrected      Delta
+  ------------------------------------------------------------------
+  MAE (s)                               88.50        77.46     -11.04
+  RMSE (s)                             127.51       111.65     -15.85
+  Bias (s)                             -39.40       -16.82     +22.58
+  Within ±60s %                         49.38        53.65      +4.28
+  Within ±120s %                        75.72        80.96      +5.23
+  P50 abs err (s)                       61.00        54.83      -6.17
+  P90 abs err (s)                      197.00       168.94     -28.06
+  P95 abs err (s)                      264.00       228.70     -35.30
+  Over-promise %                        15.05        19.76      +4.71
+  Under-promise %                       35.57        26.59      -8.99
+
+---------------- 6. SEGMENT ANALYSIS -----------------------------------
+
+
+  By hour:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0                           5,383      76.4       61.0    20.1%
+  1                           3,775      78.8       57.8    26.7%
+  10                         11,782      78.2       71.2     8.9%
+  11                         11,816      82.3       74.5     9.5%
+  12                         11,194      83.1       75.4     9.3%
+  13                         11,270      82.2       75.1     8.7%
+  14                         10,680      83.9       75.8     9.6%
+  15                         10,938      87.8       78.1    11.1%
+  16                         11,487      99.7       85.2    14.5%
+  17                         13,032     116.5       96.5    17.2%
+  18                         12,768     118.6       97.5    17.8%
+  19                         10,954      94.1       82.5    12.3%
+  2                           2,989      80.1       55.8    30.4%
+  20                         10,381      83.1       76.8     7.5%
+  21                         10,063      79.7       73.9     7.3%
+  22                          8,177      77.0       70.9     7.9%
+  23                          6,047      70.8       60.4    14.7%
+  3                           2,333      83.2       58.0    30.2%
+  4                           1,952      84.4       58.6    30.5%
+  5                           2,087      85.6       61.6    28.0%
+  6                           3,421      78.1       67.1    14.1%
+  7                           8,168      95.6       86.7     9.3%
+  8                          11,949      90.8       83.0     8.5%
+  9                          13,149      80.4       74.1     7.8%
+
+  By day_of_week:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  1                          28,649      86.9       76.7    11.8%
+  2                          30,265      91.4       79.8    12.7%
+  3                          31,651      89.0       77.6    12.8%
+  4                          21,540      87.8       76.4    13.0%
+  5                          33,856      90.9       78.9    13.2%
+  6                          33,256      88.4       77.5    12.4%
+  7                          26,578      83.9       74.4    11.3%
+
+  By start_county:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  嘉義市                         2,469      96.8       86.4    10.7%
+  嘉義縣                         1,334      87.4       82.6     5.5%
+  基隆市                         7,889      80.8       73.4     9.1%
+  宜蘭縣                           704      92.0       80.1    12.9%
+  屏東縣                           459      89.4       76.9    14.0%
+  彰化縣                           506     118.9      102.7    13.7%
+  新北市                        44,836      90.4       79.7    11.8%
+  新竹市                           779      97.4       85.7    12.0%
+  新竹縣                           862      90.6       85.2     6.0%
+  桃園市                         7,515     103.6       87.4    15.7%
+  臺中市                        24,625      90.3       77.5    14.2%
+  臺北市                        85,348      85.7       75.4    12.0%
+  臺南市                         5,985      95.1       82.7    13.0%
+  臺東縣                         1,032      93.0       81.4    12.5%
+  花蓮縣                         7,659      77.9       65.0    16.6%
+  苗栗縣                           182     118.3      105.0    11.2%
+  雲林縣                           800     103.2       92.9    10.0%
+  高雄市                        12,732      91.1       78.8    13.4%
+
+  By is_lunar_new_year:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0                         205,795      88.5       77.5    12.5%
+
+  By driver_eta_bucket:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0–120                      36,441      69.0       55.9    18.9%
+  120–600                   164,127      90.5       80.2    11.4%
+  600+                        5,227     163.0      142.5    12.6%
+
+---------------- 7. FEATURE IMPORTANCE ---------------------------------
+
+  Feature                                   Gain
+  -----------------------------------------------
+  driver_median_error                     571597
+  hour                                    233439
+  driver_eta                              230607
+  driver_avg_error                        100292
+  hour_sin                                 64810
+  hour_cos                                 59663
+  driver_error_std                         40649
+  day_of_week                              22687
+  day_of_month                             13804
+  month                                    11736
+  dow_cos                                   6610
+  dow_sin                                   6121
+  is_weekend                                   0
+
+---------------- 8. ARTIFACTS & REPRODUCIBILITY ------------------------
+
+  Artifacts dir : /Users/changfuhxiang/Desktop/LINEGO/artifacts
+  Reports dir   : /Users/changfuhxiang/Desktop/LINEGO/reports
+  Model file    : /Users/changfuhxiang/Desktop/LINEGO/artifacts/model_20260601-145546-b29b3236.lgb
+  Study db      : /Users/changfuhxiang/Desktop/LINEGO/artifacts/study_20260601-145546-b29b3236.db
+  CLI to reproduce: python -m eta_pipeline.run --config /Users/changfuhxiang/Desktop/LINEGO/final/config/quick.yaml --run-id 20260601-145546-b29b3236
+========================================================================

@@ -1,0 +1,188 @@
+========================================================================
+ ETA CORRECTION — RUN REPORT
+========================================================================
+Run id            : 20260601-150143-6ef231d3
+Timestamp / host  : 2026-06-01 16:25:28  /  MacBook-Air-428.local
+Git commit        : 655c9e9
+Library versions  : python 3.13.2 / lightgbm 4.6.0 / optuna 4.9.0 / numpy 2.3.3 / pandas 3.0.3 / sklearn 1.8.0
+Device            : cpu (fallback from cuda: CUDA Tree Learner was not enabled in this build.
+Please recompile with CMake option -DUSE_CUDA=1)
+Random seed       : 42
+
+---------------- 1. DATA & SPLITS --------------------------------------
+
+  train :    942,304 rows
+  val   :    314,220 rows
+  test  :    205,795 rows
+  LNY window     : ['2026-01-28', '2026-02-05']
+  LNY rows(train): 99858
+  Clip rule      : quantiles [0.001, 0.999]
+
+  eta_error (train): mean=+35.8s  std=121.6s  p10=-91.0s  p50=+23.0s  p90=+177.0s
+  driver_eta (train): mean=262.1s  p50=239.0s  p90=470.0s
+
+---------------- 2. CONFIG SNAPSHOT ------------------------------------
+
+  Phases:           ['feature', 'tune', 'final']
+  Core blocks:      ['base_eta']
+  Candidate blocks: ['time_basic', 'time_cyclic', 'time_flags', 'geo_raw', 'geo_distance', 'geo_center', 'geo_flags', 'region_cat', 'region_freq', 'region_target_enc', 'driver_bias', 'driver_experience', 'dest_demand', 'origin_demand', 'od_pair_stats', 'eta_derived', 'demand_by_hour']
+  Search strategy:  forward  (max_blocks=12)
+  Tuning:           n_trials=150  timeout=7200s
+  Model objective:  regression_l1
+
+---------------- 3. FEATURE SEARCH -------------------------------------
+
+  Strategy: loaded
+  Best block set: ['base_eta', 'time_basic', 'time_cyclic', 'driver_bias', 'time_flags', 'region_cat', 'geo_raw', 'geo_distance']
+  Best columns (28): ['driver_eta', 'hour', 'day_of_week', 'is_weekend', 'month', 'day_of_month', 'hour_sin', 'hour_cos', 'dow_sin', 'dow_cos', 'driver_avg_error', 'driver_median_error', 'driver_error_std', 'is_rush_hour', 'is_night', 'is_lunar_new_year', 'start_county', 'start_town', 'end_county', 'end_town', 'start_lat', 'start_lng', 'end_lat', 'end_lng', 'haversine_m', 'lat_delta', 'lng_delta', 'bearing']
+
+  Leaderboard (top 10):
+
+---------------- 4. HYPERPARAMETER TUNING ------------------------------
+
+  Trials run     : 0
+  Best val MAE   : nans
+  Best iteration : 1839
+  Best params    :
+    learning_rate: 0.04987765367029905
+    num_leaves: 120
+    min_data_in_leaf: 262
+    feature_fraction: 0.6054781045640791
+    bagging_fraction: 0.9449923596722283
+    bagging_freq: 3
+    lambda_l1: 0.0003460088720244179
+    lambda_l2: 0.06773742001166304
+
+---------------- 5. FINAL MODEL — TEST HOLDOUT -------------------------
+
+  Metric                              Raw API    Corrected      Delta
+  ------------------------------------------------------------------
+  MAE (s)                               88.50        75.81     -12.69
+  RMSE (s)                             127.51       109.33     -18.17
+  Bias (s)                             -39.40       -16.95     +22.44
+  Within ±60s %                         49.38        54.45      +5.07
+  Within ±120s %                        75.72        81.63      +5.91
+  P50 abs err (s)                       61.00        53.76      -7.24
+  P90 abs err (s)                      197.00       164.78     -32.22
+  P95 abs err (s)                      264.00       223.87     -40.13
+  Over-promise %                        15.05        19.34      +4.28
+  Under-promise %                       35.57        26.21      -9.36
+
+---------------- 6. SEGMENT ANALYSIS -----------------------------------
+
+
+  By hour:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0                           5,383      76.4       59.2    22.5%
+  1                           3,775      78.8       56.1    28.8%
+  10                         11,782      78.2       69.9    10.5%
+  11                         11,816      82.3       72.9    11.3%
+  12                         11,194      83.1       74.0    11.0%
+  13                         11,270      82.2       73.8    10.3%
+  14                         10,680      83.9       74.4    11.3%
+  15                         10,938      87.8       76.9    12.4%
+  16                         11,487      99.7       83.8    16.0%
+  17                         13,032     116.5       94.2    19.1%
+  18                         12,768     118.6       95.4    19.6%
+  19                         10,954      94.1       80.8    14.1%
+  2                           2,989      80.1       54.5    32.0%
+  20                         10,381      83.1       75.2     9.5%
+  21                         10,063      79.7       72.1     9.4%
+  22                          8,177      77.0       69.2    10.1%
+  23                          6,047      70.8       58.9    16.8%
+  3                           2,333      83.2       56.6    31.9%
+  4                           1,952      84.4       56.7    32.9%
+  5                           2,087      85.6       59.6    30.4%
+  6                           3,421      78.1       65.3    16.4%
+  7                           8,168      95.6       84.1    12.0%
+  8                          11,949      90.8       81.1    10.7%
+  9                          13,149      80.4       72.9     9.3%
+
+  By day_of_week:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  1                          28,649      86.9       74.9    13.8%
+  2                          30,265      91.4       78.4    14.3%
+  3                          31,651      89.0       76.1    14.4%
+  4                          21,540      87.8       74.8    14.8%
+  5                          33,856      90.9       77.4    14.9%
+  6                          33,256      88.4       75.8    14.3%
+  7                          26,578      83.9       72.3    13.9%
+
+  By start_county:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  嘉義市                         2,469      96.8       84.3    12.9%
+  嘉義縣                         1,334      87.4       79.7     8.8%
+  基隆市                         7,889      80.8       71.5    11.5%
+  宜蘭縣                           704      92.0       80.8    12.2%
+  屏東縣                           459      89.4       75.9    15.1%
+  彰化縣                           506     118.9       96.4    18.9%
+  新北市                        44,836      90.4       78.2    13.4%
+  新竹市                           779      97.4       84.3    13.4%
+  新竹縣                           862      90.6       83.4     7.9%
+  桃園市                         7,515     103.6       85.4    17.6%
+  臺中市                        24,625      90.3       74.7    17.3%
+  臺北市                        85,348      85.7       74.2    13.4%
+  臺南市                         5,985      95.1       81.0    14.8%
+  臺東縣                         1,032      93.0       75.6    18.7%
+  花蓮縣                         7,659      77.9       61.5    21.1%
+  雲林縣                           800     103.2       89.6    13.2%
+  高雄市                        12,732      91.1       77.8    14.5%
+
+  By is_lunar_new_year:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0                         205,795      88.5       75.8    14.3%
+
+  By distance_km:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0–2000                     58,565      85.8       74.2    13.5%
+  10000–20000                12,110      99.1       84.3    14.9%
+  20000+                      1,834     121.6       91.0    25.2%
+  2000–5000                  83,177      87.1       74.8    14.1%
+  5000–10000                 50,109      90.2       76.7    14.9%
+
+  By driver_eta_bucket:
+  Group                           n   Raw MAE   Corr MAE    Imp %
+  ----------------------------------------------------------------
+  0–120                      36,441      69.0       55.0    20.3%
+  120–300                    97,990      79.5       69.4    12.6%
+  300–600                    66,137     106.7       91.9    13.9%
+  600+                        5,227     163.0      137.5    15.6%
+
+---------------- 7. FEATURE IMPORTANCE ---------------------------------
+
+  Feature                                   Gain
+  -----------------------------------------------
+  driver_median_error                     531943
+  driver_avg_error                        512056
+  driver_eta                              476982
+  start_town                              440208
+  end_town                                366616
+  is_night                                254728
+  hour                                    240220
+  driver_error_std                        137132
+  hour_sin                                129400
+  start_lng                                86489
+  start_lat                                86221
+  haversine_m                              85691
+  hour_cos                                 84525
+  day_of_month                             71006
+  lat_delta                                62987
+  bearing                                  61095
+  lng_delta                                60293
+  day_of_week                              50349
+  start_county                             37859
+  month                                    35015
+
+---------------- 8. ARTIFACTS & REPRODUCIBILITY ------------------------
+
+  Artifacts dir : /Users/changfuhxiang/Desktop/LINEGO/artifacts
+  Reports dir   : /Users/changfuhxiang/Desktop/LINEGO/reports
+  Model file    : /Users/changfuhxiang/Desktop/LINEGO/artifacts/model_20260601-150143-6ef231d3.lgb
+  Study db      : /Users/changfuhxiang/Desktop/LINEGO/artifacts/study_20260601-150143-6ef231d3.db
+  CLI to reproduce: python -m eta_pipeline.run --config /Users/changfuhxiang/Desktop/LINEGO/final/config/default.yaml --run-id 20260601-150143-6ef231d3
+========================================================================

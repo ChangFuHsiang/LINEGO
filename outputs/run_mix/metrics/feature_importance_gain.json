@@ -1,0 +1,36 @@
+{
+  "gain": {
+    "log_eta": 852022.4887522608,
+    "hour_sin": 49774.50092791021,
+    "hour_cos": 67406.34682758152,
+    "dow": 12472.327259525657,
+    "is_weekend": 2138.572511613369,
+    "is_special_day": 4350.259542435408,
+    "driver_avg_logratio": 198843.7997919768,
+    "driver_median_logratio": 99776.55267395079,
+    "driver_std_logratio": 91173.66192944348,
+    "uid_trip_count_train": 38392.15042294562,
+    "uid_days_since_first": 19578.99972476065,
+    "start_h3_te": 101704.5923050046,
+    "start_town_te": 41353.02126407623,
+    "demand_town_hour": 33936.82350485027,
+    "end_town": 143370.55151359737
+  },
+  "split": {
+    "log_eta": 12942,
+    "hour_sin": 4755,
+    "hour_cos": 4350,
+    "dow": 2967,
+    "is_weekend": 341,
+    "is_special_day": 634,
+    "driver_avg_logratio": 9916,
+    "driver_median_logratio": 9452,
+    "driver_std_logratio": 11375,
+    "uid_trip_count_train": 6734,
+    "uid_days_since_first": 6324,
+    "start_h3_te": 10986,
+    "start_town_te": 8329,
+    "demand_town_hour": 8607,
+    "end_town": 21288
+  }
+}

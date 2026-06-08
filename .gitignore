@@ -3,6 +3,14 @@ data/raw/
 *.parquet
 *models*
 
+# 工作筆記(不上傳)
+SESSION_SUMMARY.md
+EXPERIMENT_PROMPT.md
+
+# 訓練好的模型與 Optuna DB(大型二進位檔，可重新訓練)
+*.lgb
+*.db
+
 # 訓練好的模型(可重新訓練)
 outputs/models/
 

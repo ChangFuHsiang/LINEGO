@@ -1,0 +1,65 @@
+{
+  "base_mae": 77.19969343866617,
+  "features": {
+    "log_eta": {
+      "mean_mae_increase": 46.64693421229605,
+      "std_mae_increase": 0.7032680734301414
+    },
+    "hour_sin": {
+      "mean_mae_increase": 3.3960910203652417,
+      "std_mae_increase": 0.05222187425757074
+    },
+    "hour_cos": {
+      "mean_mae_increase": 4.947554479312768,
+      "std_mae_increase": 0.06536018664521577
+    },
+    "dow": {
+      "mean_mae_increase": 0.9733967311992672,
+      "std_mae_increase": 0.016646319566506498
+    },
+    "is_weekend": {
+      "mean_mae_increase": 0.1462026509784465,
+      "std_mae_increase": 0.011108731231305364
+    },
+    "is_special_day": {
+      "mean_mae_increase": 0.0,
+      "std_mae_increase": 0.0
+    },
+    "driver_avg_logratio": {
+      "mean_mae_increase": 3.7745548353727627,
+      "std_mae_increase": 0.052161829304081454
+    },
+    "driver_median_logratio": {
+      "mean_mae_increase": 1.7165091288367846,
+      "std_mae_increase": 0.02397987125327435
+    },
+    "driver_std_logratio": {
+      "mean_mae_increase": 1.2182648438499286,
+      "std_mae_increase": 0.01863707568096293
+    },
+    "uid_trip_count_train": {
+      "mean_mae_increase": 0.6933966174193898,
+      "std_mae_increase": 0.016244496210783124
+    },
+    "uid_days_since_first": {
+      "mean_mae_increase": 0.5823937378007088,
+      "std_mae_increase": 0.007486848667354896
+    },
+    "start_h3_te": {
+      "mean_mae_increase": 1.8194950904396705,
+      "std_mae_increase": 0.03442210723254208
+    },
+    "start_town_te": {
+      "mean_mae_increase": 1.004792608703545,
+      "std_mae_increase": 0.013327437797000099
+    },
+    "demand_town_hour": {
+      "mean_mae_increase": 1.0818122226106965,
+      "std_mae_increase": 0.027071937859983845
+    },
+    "end_town": {
+      "mean_mae_increase": 2.113958371758065,
+      "std_mae_increase": 0.02752712835093629
+    }
+  }
+}
